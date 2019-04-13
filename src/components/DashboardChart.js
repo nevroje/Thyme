@@ -4,6 +4,8 @@ import axios from "axios";
 import { getProjects } from "../modules/getProjects";
 import { getTimesheets } from "../modules/getData";
 import { Dropdown } from "semantic-ui-react";
+import { endOfYesterday } from "date-fns";
+import _ from 'lodash';
 
 
 
@@ -11,114 +13,121 @@ class DashboardChart extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: {},
+			labels: [],
+			datasets: [],
 			user: "",
 			projects: [],
 			activities: []
 		};
 	}
 
-	async doughnutLogic(month) {
+	async chartData(month) {
 		const projectsResponse = await getProjects();
 		const timesheetsResponse = await getTimesheets();
-
 		const projects = projectsResponse.data;
 		const timesheets = timesheetsResponse.data;
 
-		const filtredTimesheets = timesheets.filter(asd => asd.begin > month).map(time => {
-			let index = projects.findIndex(project => project.id === time.project)
-			let project = projects[index]
-			time.project = project.name
-			return time
-		})
+		// Timesheets for this month
+		const timeSheetsForMonth = timesheets.filter(timesheet => Date.parse(timesheet.begin) > Date.parse(month))
 
-		const onlyProjectNames = filtredTimesheets.map(val => {
-			return {projectName: val.project}
-		})
-
-		const uniqueProjects = onlyProjectNames.filter((project,index) => {
-			return index === onlyProjectNames.findIndex(obj => {
-				return JSON.stringify(obj) === JSON.stringify(project);
-			});
-		});
-
-		timesheets.map(time => {
-			uniqueProjects.map(project => {
-				if (project.projectName === time.project) {
-					if (project.duration) {
-						project.duration = project.duration + time.duration
-								} else {
-						project.duration = time.duration
-					}
+		// Unique project names in the relevant timesheets
+		let projectNames = []
+		timeSheetsForMonth.forEach(timesheet => {
+			let timeSheetProjectName = projects.findIndex(project => {
+				if (project.id === timesheet.project) {
+					return project.name
 				}
 			})
+			if (!projectNames.includes(timeSheetProjectName.name)) {
+				projectNames.push({ id: projects[timeSheetProjectName].id, name: projects[timeSheetProjectName].name })
+			}
 		})
 
-		debugger;
+		let dataForDoughnutChart = timeSheetsForMonth.reduce((array, timesheet) => {
+			var projectId = timesheet.project;
+			let project = projectNames.filter(project => project.id === projectId)[0].name
+			if (!array[project]) {
+				array[project] = [];
+			}
+			array[project].push(timesheet);
+			return array;
+		}, []);
+
+		let dataSets = []
+		for (var entry in dataForDoughnutChart) {
+			console.log(dataForDoughnutChart[entry])
+			dataSets.push(_.sumBy(dataForDoughnutChart[entry], 'duration'))
+		}
+
+		let chartData = {
+			labels: Object.keys(dataForDoughnutChart),
+			datasets: dataSets
+		}
+
+		this.setState({
+			labels: chartData.labels,
+			datasets: [{ data: chartData.datasets, backgroundColor: this.getRandomColors(chartData.datasets) }]
+		})
+
 	}
 
 	componentDidMount() {
-		this.doughnutLogic("2019-04-01 00:00")
-
-		// let projectNames = [];
-		// projects.forEach(element => {
-		// 	projectNames.push(element.name);
-		// });
-		// this.setState({
-		// 	data: {
-		// 		labels: "user",
-		// 		datasets: [
-		// 			{
-		// 				label: "projects",
-		// 				data: projects,
-		// 				backgroundColor: [
-		// 					"rgba(255,105,145,0.6)",
-		// 					"rgba(155,100,210,0.6)",
-		// 					"rgba(90,178,255,0.6)",
-		// 					"rgba(240,134,67,0.6)",
-		// 					"rgba(120,120,120,0.6)",
-		// 					"rgba(250,55,197,0.6)"
-		// 				]
-		// 			}
-		// 		]
-		// 	}
-		// });
+		this.chartData("2019-04-01 00:00")
 	}
 
+	getRandomColors(array) {
+		let colors = []
+		array.forEach(() => {
+			let color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
+			colors.push(color)
+		})
+		return colors
+	}
 	render() {
 		const months = [
-			{text: "January", value: "2019-01-01 00:00"},
-			{text: "February", value: "2019-02-01 00:00"},
-			{text: "March", value: "2019-03-01 00:00"},
-			{text: "April", value: "2019-04-01 00:00"},
-			{text: "May", value: "2018-05-01 00:00"},
-			{text: "June", value: "2018-06-01 00:00"},
-			{text: "July", value: "2018-07-01 00:00"},
-			{text: "August", value: "2018-08-01 00:00"},
-			{text: "September", value: "2018-09-01 00:00"},
-			{text: "October", value: "2018-10-01 00:00"},
-			{text: "November", value: "2018-11-01 00:00"},
-			{text: "December", value: "2018-12-01 00:00"}
+			{
+				key: 1,
+				value: 'jan',
+				text: 'January'
+			},
+			{
+				key: 2,
+				value: 'jan',
+				text: 'Fabruary'
+			},
+			{
+				key: 3,
+				value: 'mar',
+				text: 'March'
+			},
+			{
+				key: 4,
+				value: 'apr',
+				text: 'April'
+			}
+
 		]
 
 		return (
-			<div>
+			<>
 				<h1>Dashboard </h1>
 				<Dropdown
 					options={months}
 					placeholder="Customer"
 					id="customer"
 					selection
-					onChange={(e, { value }) => this.doughnutLogic(value)}
+					onChange={(e, { value }) => this.chartData(new Date('2019' + value))}
 				>
 				</Dropdown>
 				<div className="chart-data">
-					<Bar
-						data={this.state.Data}
-						options={{ maintainAspectRatio: false }}
+					<Doughnut
+						data={{
+							labels: this.state.labels,
+							datasets: this.state.datasets
+						}}
 					/>
 				</div>
-			</div>
+			</>
 		);
 	}
 }
