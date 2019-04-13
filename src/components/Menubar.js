@@ -32,7 +32,7 @@ class Menubar extends Component {
 						id="menuicon"
 						disabled={visible}
 						onClick={this.handleShowClick}
-						style={{ background: "#5bb695", padding: 0, marginLeft: 7 }}
+						style={{ background: "#5bb695", padding: 0, marginLeft: 7, position: "fixed", left: "0"}}
 					>
 						<IoIosMenu size={30} />
 					</Button>
@@ -47,7 +47,7 @@ class Menubar extends Component {
 					visible={visible}
 					style={{
 						background: "#46b395",
-						width: "380px"
+						width: "300px"
 					}}
 				>
 					<Button
@@ -61,18 +61,19 @@ class Menubar extends Component {
 							src={logo}
 							alt="logo"
 							style={{
-								paddingTop: "20px",
 								marginBottom: "25px",
-								width: "207px",
+								width: "245px",
+                marginLeft: "10px"
 							}}
 						/>
 					</div>
 
 					<Menu.Item
-						component={<Link to="/TimeRecording" />}
+						as={Link}
+						to="/"
 						style={{
 							background: "#dbdbdf",
-							marginBottom: "1px",
+							marginBottom: "2px",
 							height: "60px",
 							marginLeft: "2%",
 							width: "96%",
@@ -93,10 +94,11 @@ class Menubar extends Component {
 						Activity Timer
 					</Menu.Item>
 					<Menu.Item
-						as="a"
+						as={Link}
+						to="/Test"
 						style={{
 							background: "#dbdbdf",
-							marginBottom: "1px",
+							marginBottom: "2px",
 							height: "60px",
 							marginLeft: "2%",
 							width: "96%",
@@ -120,7 +122,7 @@ class Menubar extends Component {
 						as="a"
 						style={{
 							background: "#dbdbdf",
-							marginBottom: "1px",
+							marginBottom: "2px",
 							height: "60px",
 							marginLeft: "2%",
 							width: "96%",
@@ -140,6 +142,28 @@ class Menubar extends Component {
 						/>
 						Reports
 					</Menu.Item>
+					<div
+						className="item"
+						as="a"
+						onClick={() => {
+							localStorage.removeItem("authenticated");
+							document.location.href = "./";
+						}}
+						style={{
+							background: "#354151",
+							height: "40px",
+							width: "50%",
+							marginLeft: "22%",
+							textAlign: "center",
+							color: "white",
+							marginTop: "80px",
+							border: "1px solid #354151",
+							borderRadius: "6px",
+						}}
+					>
+						{" "}
+						Logout
+					</div>
 				</Sidebar>
 			</Grid>
 		);

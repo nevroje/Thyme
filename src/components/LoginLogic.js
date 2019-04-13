@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import LoginForm from "./LoginForm";
-import { authenticate } from "../modules/Auth";
+import React, { Component } from 'react'
+import LoginForm from './LoginForm'
+import { authenticate } from '../modules/Auth'
+
 class LoginLogic extends Component {
 	state = {
 		errorMessage: "",
