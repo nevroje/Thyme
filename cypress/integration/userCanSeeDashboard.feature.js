@@ -17,7 +17,7 @@ describe("User can see a dashboard", () => {
 		cy.get("input[type=password]").type("api_kitten");
 		cy.get("button[type=submit]").click();
 		cy.get("Button[id=menuicon]").click("topLeft", { force: true });
-    cy.contains('Dashboard').click()
+    cy.contains('Diagrams').click()
 		cy.visit("http://localhost:3000/Dashboard");
 		cy.get(".chartjs-render-monitor");
 	});

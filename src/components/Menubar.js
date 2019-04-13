@@ -115,7 +115,7 @@ class Menubar extends Component {
 								marginRight: "15px"
 							}}
 						/>
-						Dashboard
+						Diagrams
 					</Menu.Item>
 					<Menu.Item
 						className="item"
