@@ -56,7 +56,11 @@ class DashboardChart extends Component {
 		let dataSets = []
 		for (var entry in dataForDoughnutChart) {
 			console.log(dataForDoughnutChart[entry])
-			dataSets.push(_.sumBy(dataForDoughnutChart[entry], 'duration'))
+			let duration = new Date(null); 
+			duration.setSeconds = _.sumBy(dataForDoughnutChart[entry], 'duration')
+			var time = duration.getUTCHours() + ':' + duration.getUTCMinutes() + ':' +  duration.getUTCSeconds();
+debugger;
+			dataSets.push(time)
 		}
 
 		let chartData = {
