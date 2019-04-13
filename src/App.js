@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { Switch, Route } from "react-router-dom";
 import HomePage from "./components/HomePage"
-import Dashboard from './components/Dashboard';
-
-
+import Dashboard from './components/Dashboard'
 
 class App extends Component {
 	render() {

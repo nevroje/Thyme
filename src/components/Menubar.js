@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { Button, Grid, Menu, Sidebar } from "semantic-ui-react";
-import { IoIosMenu } from "react-icons/io";
+import {
+	IoIosMenu,
+	IoIosTimer,
+	IoIosStats,
+	IoIosDocument
+} from "react-icons/io";
 import logo from "../image/image.png";
 import { Link } from "react-router-dom";
 
@@ -20,12 +25,14 @@ class Menubar extends Component {
 
 		return (
 			<Grid columns={2} style={{ background: "#354152" }}>
-				<Grid.Column style={{ background: "#5bb695", width: "60px" }}>
+				<Grid.Column
+					style={{ background: "#5bb695", width: "60px", height: "4920px", position: "absolute" }}
+				>
 					<Button
 						id="menuicon"
 						disabled={visible}
 						onClick={this.handleShowClick}
-						style={{ background: "#5bb695", padding: 0, marginLeft: 7 }}
+						style={{ background: "#5bb695", padding: 0, marginLeft: 7, position: "fixed", left: "0"}}
 					>
 						<IoIosMenu size={30} />
 					</Button>
@@ -43,77 +50,120 @@ class Menubar extends Component {
 						width: "300px"
 					}}
 				>
+					<Button
+						onClick={this.handleHideClick}
+						style={{ background: "#46b395", marginLeft: "220px" }}
+						>
+						<IoIosMenu size={30}/>
+						</Button>
 					<div className="form">
 						<img
 							src={logo}
 							alt="logo"
 							style={{
-								marginLeft: "27px",
-								paddingTop: "20px",
 								marginBottom: "25px",
-								width: "207px",
-								height: "135px"
+								width: "245px",
+                marginLeft: "10px"
 							}}
 						/>
 					</div>
 
 					<Menu.Item
+						as={Link}
+						to="/"
+						style={{
+							background: "#dbdbdf",
+							marginBottom: "2px",
+							height: "60px",
+							marginLeft: "2%",
+							width: "96%",
+							verticalAlign: "middle",
+							color: "#354151",
+							fontSize: "20px"
+						}}
+					>
+						<IoIosTimer
+							size={30}
+							style={{
+								paddingBottom: "3px",
+								float: "left",
+								marginLeft: "15px",
+								marginRight: "15px"
+							}}
+						/>
+						Activity Timer
+					</Menu.Item>
+					<Menu.Item
+						as={Link}
+						to="/dashboard"
+						style={{
+							background: "#dbdbdf",
+							marginBottom: "2px",
+							height: "60px",
+							marginLeft: "2%",
+							width: "96%",
+							color: "#354151",
+							fontSize: "20px"
+						}}
+					>
+						<IoIosStats
+							size={30}
+							style={{
+								paddingBottom: "3px",
+								float: "left",
+								marginLeft: "15px",
+								marginRight: "15px"
+							}}
+						/>
+						Dashboard
+					</Menu.Item>
+					<Menu.Item
 						className="item"
-						style={{
-							background: "#dbdbdf",
-							marginBottom: "10px",
-							width: "80%",
-							marginLeft: "10%"
-						}}
-					>
-						<Link id="dashboard" to={{pathname: "/dashboard"}}>
-							Dashboard
-						</Link>
-					</Menu.Item>
-					<Menu.Item
 						as="a"
 						style={{
 							background: "#dbdbdf",
-							marginBottom: "10px",
-							width: "80%",
-							marginLeft: "10%"
+							marginBottom: "2px",
+							height: "60px",
+							marginLeft: "2%",
+							width: "96%",
+							verticalAlign: "middle",
+							color: "#354151",
+							fontSize: "20px"
 						}}
 					>
-						Tab2
+						<IoIosDocument
+							size={30}
+							style={{
+								paddingBottom: "3px",
+								float: "left",
+								marginLeft: "15px",
+								marginRight: "15px"
+							}}
+						/>
+						Reports
 					</Menu.Item>
-					<Menu.Item
+					<div
+						className="item"
 						as="a"
+						onClick={() => {
+							localStorage.removeItem("authenticated");
+							document.location.href = "./";
+						}}
 						style={{
-							background: "#dbdbdf",
-							marginBottom: "10px",
-							width: "80%",
-							marginLeft: "10%"
+							background: "#354151",
+							height: "40px",
+							width: "50%",
+							marginLeft: "22%",
+							textAlign: "center",
+							color: "white",
+							marginTop: "80px",
+							border: "1px solid #354151",
+							borderRadius: "6px",
 						}}
 					>
-						Tab3
-					</Menu.Item>
-					<Menu.Item
-						as="a"
-						style={{
-							background: "#dbdbdf",
-							marginBottom: "10px",
-							width: "80%",
-							marginLeft: "10%"
-						}}
-					>
-						Tab4
-					</Menu.Item>
-					<Menu.Item
-						as="a"
-						style={{
-							background: "#dbdbdf",
-							marginBottom: "10px",
-							width: "80%",
-							marginLeft: "10%"
-						}}
-					>
-						Tab5
-					</Menu.Item>
+						{" "}
+						Logout
+					</div>
 				</Sidebar>
 			</Grid>
 		);
