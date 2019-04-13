@@ -95,7 +95,7 @@ class Menubar extends Component {
 					</Menu.Item>
 					<Menu.Item
 						as={Link}
-						to="/Test"
+						to="/dashboard"
 						style={{
 							background: "#dbdbdf",
 							marginBottom: "2px",
