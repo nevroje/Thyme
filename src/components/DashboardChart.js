@@ -56,11 +56,8 @@ class DashboardChart extends Component {
 		let dataSets = []
 		for (var entry in dataForDoughnutChart) {
 			console.log(dataForDoughnutChart[entry])
-			let duration = new Date(null); 
-			duration.setSeconds = _.sumBy(dataForDoughnutChart[entry], 'duration')
-			var time = duration.getUTCHours() + ':' + duration.getUTCMinutes() + ':' +  duration.getUTCSeconds();
-debugger;
-			dataSets.push(time)
+			let duration = _.sumBy(dataForDoughnutChart[entry], 'duration')
+			dataSets.push(duration)
 		}
 
 		let chartData = {
@@ -113,7 +110,8 @@ debugger;
 		]
 
 		return (
-			<>
+			<div style={{ marginLeft: '77px', paddingBottom: "40px" }}>
+
 				<h1>Dashboard </h1>
 				<Dropdown
 					options={months}
@@ -131,7 +129,7 @@ debugger;
 						}}
 					/>
 				</div>
-			</>
+			</div>
 		);
 	}
 }
